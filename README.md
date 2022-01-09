@@ -3,6 +3,7 @@
 <ul>
   {% for post in site.posts %}
     <li>
+      <b>{{ post.date | date: "%-d %B %Y" }}</b>
       <a href="{{ post.url }}">{{ post.title }}</a>
     </li>
   {% endfor %}
