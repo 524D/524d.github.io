@@ -5,4 +5,4 @@ author:
 description: > # this means to ignore newlines until "show_excerpts:"
 .
 
-theme: minima
+theme: jekyll-theme-minimal
