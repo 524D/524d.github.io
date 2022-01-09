@@ -1,6 +1,7 @@
 ---
 layout: post
 title: The half-life of an age related protein
+author: Rob Marissen
 categories: [Science, Proteomics]
 excerpt: Elastin, a protein involved in tissue elasticity, is mainly degrades 
 ---
