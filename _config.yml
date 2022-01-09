@@ -1,1 +1,8 @@
-theme: jekyll-theme-minimal
+title: Hello world
+author:
+  name: Rob Marissen (aka 524D)
+  email: 
+description: > # this means to ignore newlines until "show_excerpts:"
+.
+
+theme: minima
