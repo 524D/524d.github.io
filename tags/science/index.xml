@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Science on Rob Marissen</title>
+    <link>https://524d.github.io/tags/science/</link>
+    <description>Recent content in Science on Rob Marissen</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©2022, CC-SA 4.0, Rob Marissen</copyright>
+    <lastBuildDate>Sun, 09 Jan 2022 14:00:00 -0100</lastBuildDate><atom:link href="https://524d.github.io/tags/science/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The half-life of an age related protein</title>
+      <link>https://524d.github.io/posts/the-half-life-of-an-age-related-protein/</link>
+      <pubDate>Sun, 09 Jan 2022 14:00:00 -0100</pubDate>
+      
+      <guid>https://524d.github.io/posts/the-half-life-of-an-age-related-protein/</guid>
+      <description>As a Sunday morning project, I have tried to resolve a question that has been bothering me for some time.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Rob Marissen</title>
+    <link>https://524d.github.io/tags/</link>
+    <description>Recent content in Tags on Rob Marissen</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©2022, CC-SA 4.0, Rob Marissen</copyright>
+    <lastBuildDate>Sun, 09 Jan 2022 14:00:00 -0100</lastBuildDate><atom:link href="https://524d.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Science</title>
+      <link>https://524d.github.io/tags/science/</link>
+      <pubDate>Sun, 09 Jan 2022 14:00:00 -0100</pubDate>
+      
+      <guid>https://524d.github.io/tags/science/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
