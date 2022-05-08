@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>©2022, CC-SA 4.0, Rob Marissen</copyright>
-    <lastBuildDate>Sun, 09 Jan 2022 14:00:00 -0100</lastBuildDate><atom:link href="https://524d.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 08 May 2022 21:59:01 +0200</lastBuildDate><atom:link href="https://524d.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Switched to HUGO</title>
+      <link>https://524d.github.io/posts/switched-to-hugo/</link>
+      <pubDate>Sun, 08 May 2022 21:59:01 +0200</pubDate>
+      
+      <guid>https://524d.github.io/posts/switched-to-hugo/</guid>
+      <description>This site now uses HUGO with the Ezhil theme. The HUGO way of building a static website fits my way of working much more than the standard GitHub way using Jekyll.</description>
+    </item>
+    
     <item>
       <title>The half-life of an age related protein</title>
       <link>https://524d.github.io/posts/the-half-life-of-an-age-related-protein/</link>
