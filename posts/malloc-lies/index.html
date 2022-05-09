@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Malloc Lies - Rob Marissen</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Malloc Lies" />
+<meta property="og:description" content="In software development, when we want to store data in main memory, we need to reserve memory space. This is called memory allocation." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://524d.github.io/posts/malloc-lies/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-05-09T17:02:19+02:00" />
+<meta property="article:modified_time" content="2022-05-09T17:02:19+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Malloc Lies"/>
+<meta name="twitter:description" content="In software development, when we want to store data in main memory, we need to reserve memory space. This is called memory allocation."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://524d.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://524d.github.io/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="https://524d.github.io/css/custom.css" />
+	<link rel="stylesheet" type="text/css" href="https://524d.github.io/css/dark.css" media="(prefers-color-scheme: dark)" />
+	<link rel="stylesheet" type="text/css" href="https://524d.github.io/css/custom-dark.css" media="(prefers-color-scheme: dark)" />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://524d.github.io/js/main.js"></script>
+	<script src="https://524d.github.io/js/abc.js"></script>
+	<script src="https://524d.github.io/js/xyz.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<base href="https://524d.github.io/">
+	<h1 class="site-title"><a href="https://524d.github.io/">Rob Marissen</a></h1>
+	<div class="site-description"><h2><a href="/about">&hellip;the whole truth&hellip;</a></h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/524d" title="Github"><i data-feather="github"></i></a><a href="https://nl.linkedin.com/in/rob-marissen-7a28455" title="LinkedIn"><i data-feather="linkedin"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Malloc Lies</h1>
+			<div class="meta">Posted at &mdash; May 9, 2022</div>
+			
+		</div>
+
+		<div class="markdown">
+			<p>In software development, when we want to store data in main memory,
+we need to reserve memory space. This is called memory allocation.
+Originally, the main purpose was to prevent different programs from
+using the same memory locations, thereby causing invalid results or crashes.</p>
+<p>Most current day computers have memory management hardware which
+prevent programs from accessing each others memory, so this reason
+no longer applies. Instead, memory is nowadays allocated to tell the operating system
+to reserve a piece of memory that can later be used.</p>
+<p>At least, that is what many people think.</p>
+<p>In reality, something different happens, which is best demonstrated
+using a small test test program. This program is written in C,
+because that offers quite low level memory allocation access,
+but with some effort almost any programming language can do the same.
+We use Linux for testing, but the same results apply to Windows.</p>
+<p>For brevity, some details such as include files are omitted, but
+the full program can be found at the end of this post.</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#dc322f">int</span> <span style="color:#268bd2">main</span>(<span style="color:#dc322f">void</span>) {
+    <span style="color:#719e07">for</span> (<span style="color:#dc322f">int</span> i <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>; i <span style="color:#719e07">&lt;</span> <span style="color:#2aa198">100</span>; i<span style="color:#719e07">++</span>)
+    {
+        printf(<span style="color:#2aa198">&#34;malloc 1GB, total: %dGB</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>, i <span style="color:#719e07">+</span> <span style="color:#2aa198">1</span>);
+        <span style="color:#dc322f">void</span> <span style="color:#719e07">*</span>buf <span style="color:#719e07">=</span> malloc(<span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span>);
+        <span style="color:#719e07">if</span> (buf <span style="color:#719e07">==</span> <span style="color:#2aa198">0</span>)
+        {
+            printf(<span style="color:#2aa198">&#34;malloc failed</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>);
+            exit(<span style="color:#2aa198">1</span>);
+        }
+        sleep(<span style="color:#2aa198">1</span>);
+    }
+}
+</code></pre></div><p>This program allocates blocks of 1 GB in a loop with a one second delay,
+until a total of 100 GB allocated or until memory allocation fails.</p>
+<p>My home PC has 32 GB main memory so we may expect the program stop well before reaching 100GB.
+Surprisingly, the output of this program is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">malloc 1GB, total: 1GB
+malloc 1GB, total: 2GB
+.
+.
+malloc 1GB, total: 100GB
+</code></pre></div><p>To verify that memory allocation really occurs, and we are not fooled by
+some compiler optimization, we can monitor interactions with the Linux kernel using <code>strace</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ strace a.out
+.
+.
+mmap<span style="color:#719e07">(</span>NULL, 1073745920, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0<span style="color:#719e07">)</span> <span style="color:#719e07">=</span> 0x7f6a42c86000
+write<span style="color:#719e07">(</span>1, <span style="color:#2aa198">&#34;malloc 1GB, total: 99GB\n&#34;</span>, 24malloc 1GB, total: 99GB
+<span style="color:#719e07">)</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">24</span>
+clock_nanosleep<span style="color:#719e07">(</span>CLOCK_REALTIME, 0, <span style="color:#719e07">{</span><span style="color:#268bd2">tv_sec</span><span style="color:#719e07">=</span>1, <span style="color:#268bd2">tv_nsec</span><span style="color:#719e07">=</span>0<span style="color:#719e07">}</span>, 0x7ffe617280d0<span style="color:#719e07">)</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>
+mmap<span style="color:#719e07">(</span>NULL, 1073745920, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0<span style="color:#719e07">)</span> <span style="color:#719e07">=</span> 0x7f6a02c85000
+write<span style="color:#719e07">(</span>1, <span style="color:#2aa198">&#34;malloc 1GB, total: 100GB\n&#34;</span>, 25malloc 1GB, total: 100GB
+<span style="color:#719e07">)</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">25</span>
+.
+.
+</code></pre></div><p>So, the program does indeed request 100 memory blocks of 1GB.</p>
+<h2 id="how-memory-is-allocated-in-reality">How memory is allocated in reality</h2>
+<p>In reality, when memory is allocated, the operating system merely
+sets up the memory management hardware, so that whenever data is written
+to the allocated memory, it can do the actual allocation.
+For this, the operating system sets up the <a href="https://en.wikipedia.org/wiki/Page_table">page table</a>
+for our program in such a way that when data is written to a
+new page, a page fault (interrupt) occurs, and a free memory page is
+substituted to the previously unused page.</p>
+<p>This handling of memory allocation is common practice in most modern operating systems,
+and simplifies software development by allowing allocation of memory that may never be used.
+In a way, the software abuses the operating system by requesting more memory than
+is really used.</p>
+<p>The bad side of this story is that there is no guarantee that allocated memory is
+really available. Therefore, whenever a program writes to a memory location
+that was previously allocated, it may happen that no memory is available. In that case,
+the operating system will terminate a program (not necessary the one that cause the
+allocation failure) to free up memory.</p>
+<p>We can see this by modifying our program so that after the memory allocation
+is finished, it writes one byte in every memory page, which is a 4 KB for Linux on Intel processors.
+The following code does that.</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">    <span style="color:#dc322f">char</span> <span style="color:#719e07">*</span>buf_1G[<span style="color:#2aa198">100</span>];
+
+    <span style="color:#719e07">for</span> (<span style="color:#dc322f">int</span> i <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>; i <span style="color:#719e07">&lt;</span> <span style="color:#2aa198">100</span>; i<span style="color:#719e07">++</span>)
+    {
+        printf(<span style="color:#2aa198">&#34;malloc 1GB, total: %dGB</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>, i <span style="color:#719e07">+</span> <span style="color:#2aa198">1</span>);
+        <span style="color:#dc322f">void</span> <span style="color:#719e07">*</span>buf <span style="color:#719e07">=</span> malloc(<span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span>);
+        <span style="color:#719e07">if</span> (buf <span style="color:#719e07">==</span> <span style="color:#2aa198">0</span>)
+        {
+            printf(<span style="color:#2aa198">&#34;malloc failed</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>);
+            exit(<span style="color:#2aa198">1</span>);
+        }
+        buf_1G[i] <span style="color:#719e07">=</span> (<span style="color:#dc322f">char</span> <span style="color:#719e07">*</span>)buf;
+        sleep(<span style="color:#2aa198">1</span>);
+    }
+
+    <span style="color:#719e07">for</span> (<span style="color:#dc322f">int</span> i <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>; i <span style="color:#719e07">&lt;</span> <span style="color:#2aa198">100</span>; i<span style="color:#719e07">++</span>)
+    {
+        printf(<span style="color:#2aa198">&#34;write 1GB, total: %dGB</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>, i <span style="color:#719e07">+</span> <span style="color:#2aa198">1</span>);
+        <span style="color:#719e07">for</span> (<span style="color:#dc322f">unsigned</span> <span style="color:#dc322f">long</span> offset <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>;
+             offset <span style="color:#719e07">&lt;</span> <span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span>;
+             offset <span style="color:#719e07">+=</span> <span style="color:#2aa198">4096</span>)
+        {
+            ((<span style="color:#dc322f">char</span> <span style="color:#719e07">*</span>)buf_1G[i])[offset] <span style="color:#719e07">=</span> <span style="color:#2aa198">1</span>;
+        }
+        sleep(<span style="color:#2aa198">1</span>);
+    }
+
+</code></pre></div><p>To view memory usage, we can use <code>top -d 1 -o VIRT</code>. This shows
+running programs sorted by virtual memory usage.</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 168596 robm      20   0  100,0g   7,0g   1388 S  27,7  22,6   0:02.02 a.out    
+ 116423 robm      20   0   42,4g 346024  70728 S   0,0   1,1  35:27.53 code 
+ 159870 robm      20   0   42,4g 293216  69640 S   0,0   0,9   3:43.84 code
+  17973 robm      20   0   38,4g 188184   4564 S   0,0   0,6  47:12.31 code 
+ 125963 robm      20   0   34,4g 188656  64424 S   0,0   0,6   1:19.25 code
+ 116618 robm      20   0   30,3g 146936  26456 S   0,0   0,5   1:42.47 code  
+ 116458 robm      20   0   28,4g  93472  41388 S   0,0   0,3   3:33.40 code
+ 167091 robm      20   0   24,5g 137208  90256 S   0,0   0,4   0:02.54 chrome 
+ 114913 robm      20   0   24,5g 109532  31056 S   0,0   0,3   0:25.76 chrome
+ 163591 robm      20   0   24,5g 146188  99660 S   0,0   0,5   0:19.06 chrome
+...
+</code></pre></div><p>Interestingly, apart from out own little program, we see that huge amounts
+of memory is allocated by Visual Studio Code, but only a relatively small
+amount is actually used.</p>
+<p>When running the program that writes to each page, it is terminated when
+physical memory runs out:</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">.
+.
+write 1GB, total: 25GB
+write 1GB, total: 26GB
+Killed
+</code></pre></div><p>In Linux, we can tweak <a href="https://serverfault.com/questions/606185/how-does-vm-overcommit-memory-work">how much memory is over-commited</a>.
+Avoiding over-committing may only be useful for high-availability systems.
+As we saw above, on desktop systems,
+it is common that software allocated much more memory than needed.</p>
+<p>While our examples only used Linux, Microsoft Windows handles memory allocation
+in a very similar way.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The conclusion of this story is that when you allocate memory, don&rsquo;t expect that
+it will really be available!</p>
+<h2 id="code">Code</h2>
+<p>Full source code used in the tests:</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#719e07">#include</span> <span style="color:#719e07">&lt;stdio.h&gt;</span><span style="color:#719e07">
+</span><span style="color:#719e07">#include</span> <span style="color:#719e07">&lt;stdlib.h&gt;</span><span style="color:#719e07">
+</span><span style="color:#719e07"></span>
+<span style="color:#719e07">#ifdef _WIN32
+</span><span style="color:#719e07">#include</span> <span style="color:#719e07">&lt;Windows.h&gt;</span><span style="color:#719e07">
+</span><span style="color:#719e07">#else
+</span><span style="color:#719e07">#include</span> <span style="color:#719e07">&lt;unistd.h&gt;</span><span style="color:#719e07">
+</span><span style="color:#719e07">#endif
+</span><span style="color:#719e07"></span>
+<span style="color:#dc322f">int</span> <span style="color:#268bd2">main</span>(<span style="color:#dc322f">void</span>)
+{
+    setvbuf(stdout, <span style="color:#b58900">NULL</span>, _IONBF, <span style="color:#2aa198">0</span>); <span style="color:#586e75">// Auto-flush stdio
+</span><span style="color:#586e75"></span>
+    <span style="color:#dc322f">char</span> <span style="color:#719e07">*</span>buf_1G[<span style="color:#2aa198">100</span>];
+
+    <span style="color:#719e07">for</span> (<span style="color:#dc322f">int</span> i <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>; i <span style="color:#719e07">&lt;</span> <span style="color:#2aa198">100</span>; i<span style="color:#719e07">++</span>)
+    {
+        printf(<span style="color:#2aa198">&#34;malloc 1GB, total: %dGB</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>, i <span style="color:#719e07">+</span> <span style="color:#2aa198">1</span>);
+        <span style="color:#dc322f">void</span> <span style="color:#719e07">*</span>buf <span style="color:#719e07">=</span> malloc(<span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span>);
+        <span style="color:#719e07">if</span> (buf <span style="color:#719e07">==</span> <span style="color:#2aa198">0</span>)
+        {
+            printf(<span style="color:#2aa198">&#34;malloc failed</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>);
+            exit(<span style="color:#2aa198">1</span>);
+        }
+        buf_1G[i] <span style="color:#719e07">=</span> (<span style="color:#dc322f">char</span> <span style="color:#719e07">*</span>)buf;
+        sleep(<span style="color:#2aa198">1</span>);
+    }
+
+    <span style="color:#719e07">for</span> (<span style="color:#dc322f">int</span> i <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>; i <span style="color:#719e07">&lt;</span> <span style="color:#2aa198">100</span>; i<span style="color:#719e07">++</span>)
+    {
+        printf(<span style="color:#2aa198">&#34;write 1GB, total: %dGB</span><span style="color:#cb4b16">\n</span><span style="color:#2aa198">&#34;</span>, i <span style="color:#719e07">+</span> <span style="color:#2aa198">1</span>);
+        <span style="color:#719e07">for</span> (<span style="color:#dc322f">unsigned</span> <span style="color:#dc322f">long</span> offset <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>;
+             offset <span style="color:#719e07">&lt;</span> <span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span> <span style="color:#719e07">*</span> <span style="color:#2aa198">1024</span>;
+             offset <span style="color:#719e07">+=</span> <span style="color:#2aa198">4096</span>)
+        {
+            ((<span style="color:#dc322f">char</span> <span style="color:#719e07">*</span>)buf_1G[i])[offset] <span style="color:#719e07">=</span> <span style="color:#2aa198">1</span>;
+        }
+        sleep(<span style="color:#2aa198">1</span>);
+    }
+    <span style="color:#719e07">return</span> <span style="color:#2aa198">0</span>;
+}
+</code></pre></div>
+		</div>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="flat">
+					
+					<li><a href="/%20/tags/programming">programming</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©2022, CC-SA 4.0, Rob Marissen |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+
+</html>

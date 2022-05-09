@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>©2022, CC-SA 4.0, Rob Marissen</copyright>
-    <lastBuildDate>Sun, 08 May 2022 21:59:01 +0200</lastBuildDate><atom:link href="https://524d.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 May 2022 17:02:19 +0200</lastBuildDate><atom:link href="https://524d.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Malloc Lies</title>
+      <link>https://524d.github.io/posts/malloc-lies/</link>
+      <pubDate>Mon, 09 May 2022 17:02:19 +0200</pubDate>
+      
+      <guid>https://524d.github.io/posts/malloc-lies/</guid>
+      <description>In software development, when we want to store data in main memory, we need to reserve memory space. This is called memory allocation.</description>
+    </item>
+    
     <item>
       <title>Switched to HUGO</title>
       <link>https://524d.github.io/posts/switched-to-hugo/</link>

@@ -2,11 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://524d.github.io/posts/malloc-lies/</loc>
+    <lastmod>2022-05-09T17:02:19+02:00</lastmod>
+  </url><url>
     <loc>https://524d.github.io/posts/</loc>
-    <lastmod>2022-05-08T21:59:01+02:00</lastmod>
+    <lastmod>2022-05-09T17:02:19+02:00</lastmod>
+  </url><url>
+    <loc>https://524d.github.io/tags/programming/</loc>
+    <lastmod>2022-05-09T17:02:19+02:00</lastmod>
   </url><url>
     <loc>https://524d.github.io/</loc>
-    <lastmod>2022-05-08T21:59:01+02:00</lastmod>
+    <lastmod>2022-05-09T17:02:19+02:00</lastmod>
+  </url><url>
+    <loc>https://524d.github.io/tags/</loc>
+    <lastmod>2022-05-09T17:02:19+02:00</lastmod>
   </url><url>
     <loc>https://524d.github.io/posts/switched-to-hugo/</loc>
     <lastmod>2022-05-08T21:59:01+02:00</lastmod>
@@ -15,9 +24,6 @@
     <lastmod>2022-04-25T21:07:02+02:00</lastmod>
   </url><url>
     <loc>https://524d.github.io/tags/science/</loc>
-    <lastmod>2022-05-08T14:00:00-01:00</lastmod>
-  </url><url>
-    <loc>https://524d.github.io/tags/</loc>
     <lastmod>2022-05-08T14:00:00-01:00</lastmod>
   </url><url>
     <loc>https://524d.github.io/posts/the-half-life-of-an-age-related-protein/</loc>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>programming on Rob Marissen</title>
+    <link>https://524d.github.io/tags/programming/</link>
+    <description>Recent content in programming on Rob Marissen</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©2022, CC-SA 4.0, Rob Marissen</copyright>
+    <lastBuildDate>Mon, 09 May 2022 17:02:19 +0200</lastBuildDate><atom:link href="https://524d.github.io/tags/programming/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Malloc Lies</title>
+      <link>https://524d.github.io/posts/malloc-lies/</link>
+      <pubDate>Mon, 09 May 2022 17:02:19 +0200</pubDate>
+      
+      <guid>https://524d.github.io/posts/malloc-lies/</guid>
+      <description>In software development, when we want to store data in main memory, we need to reserve memory space. This is called memory allocation.</description>
+    </item>
+    
+  </channel>
+</rss>
