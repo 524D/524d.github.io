@@ -2,8 +2,8 @@
 <html>
 <head>
 	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Malloc Lies - Rob Marissen</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:title" content="Malloc Lies" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Malloc lies - Rob Marissen</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Malloc lies" />
 <meta property="og:description" content="In software development, when we want to store data in main memory, we need to reserve memory space. This is called memory allocation." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://524d.github.io/posts/malloc-lies/" /><meta property="article:section" content="posts" />
@@ -11,7 +11,7 @@
 <meta property="article:modified_time" content="2022-05-09T17:02:19+02:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Malloc Lies"/>
+<meta name="twitter:title" content="Malloc lies"/>
 <meta name="twitter:description" content="In software development, when we want to store data in main memory, we need to reserve memory space. This is called memory allocation."/>
 <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
 
@@ -64,7 +64,7 @@
 
 
 		<div class="post-header">
-			<h1 class="title">Malloc Lies</h1>
+			<h1 class="title">Malloc lies</h1>
 			<div class="meta">Posted at &mdash; May 9, 2022</div>
 			
 		</div>
@@ -76,8 +76,9 @@ Originally, the main purpose was to prevent different programs from
 using the same memory locations, thereby causing invalid results or crashes.</p>
 <p>Most current day computers have memory management hardware which
 prevent programs from accessing each others memory, so this reason
-no longer applies. Instead, memory is nowadays allocated to tell the operating system
-to reserve a piece of memory that can later be used.</p>
+no longer applies. Instead, nowadays memory allocating is used to
+to reserve a piece of memory that can be used by a program when
+allocation is successful.</p>
 <p>At least, that is what many people think.</p>
 <p>In reality, something different happens, which is best demonstrated
 using a small test test program. This program is written in C,
@@ -103,7 +104,10 @@ the full program can be found at the end of this post.</p>
 until a total of 100 GB allocated or until memory allocation fails.</p>
 <p>My home PC has 32 GB main memory so we may expect the program stop well before reaching 100GB.
 Surprisingly, the output of this program is:</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">malloc 1GB, total: 1GB
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$ gcc -Wall alloc-test.c
+$ ./a.out
+
+malloc 1GB, total: 1GB
 malloc 1GB, total: 2GB
 .
 .
@@ -137,9 +141,9 @@ In a way, the software abuses the operating system by requesting more memory tha
 is really used.</p>
 <p>The bad side of this story is that there is no guarantee that allocated memory is
 really available. Therefore, whenever a program writes to a memory location
-that was previously allocated, it may happen that no memory is available. In that case,
-the operating system will terminate a program (not necessary the one that cause the
-allocation failure) to free up memory.</p>
+that was previously allocated, it may happen that the memory cannot be provided by the
+operating system. In that case, the operating system will terminate a program
+(not necessary the one that cause the allocation failure) to free up memory.</p>
 <p>We can see this by modifying our program so that after the memory allocation
 is finished, it writes one byte in every memory page, which is a 4 KB for Linux on Intel processors.
 The following code does that.</p>
@@ -172,7 +176,7 @@ The following code does that.</p>
 
 </code></pre></div><p>To view memory usage, we can use <code>top -d 1 -o VIRT</code>. This shows
 running programs sorted by virtual memory usage.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
  168596 robm      20   0  100,0g   7,0g   1388 S  27,7  22,6   0:02.02 a.out    
  116423 robm      20   0   42,4g 346024  70728 S   0,0   1,1  35:27.53 code 
  159870 robm      20   0   42,4g 293216  69640 S   0,0   0,9   3:43.84 code
@@ -198,8 +202,8 @@ Killed
 Avoiding over-committing may only be useful for high-availability systems.
 As we saw above, on desktop systems,
 it is common that software allocated much more memory than needed.</p>
-<p>While our examples only used Linux, Microsoft Windows handles memory allocation
-in a very similar way.</p>
+<p>While our examples only used Linux, Microsoft Windows and other operating systems handle
+memory allocation in a very similar way.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>The conclusion of this story is that when you allocate memory, don&rsquo;t expect that
 it will really be available!</p>
